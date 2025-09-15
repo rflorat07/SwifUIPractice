@@ -9,10 +9,6 @@ import SwiftUI
 import SwiftfulUI
 import SwiftfulRouting
 
-import SwiftUI
-import SwiftfulUI
-import SwiftfulRouting
-
 struct ContentView: View {
     
     @Environment(\.router) var router
@@ -25,11 +21,11 @@ struct ContentView: View {
                 }
             }
             
-//            Button("Open Bumble") {
-//                router.showScreen(.fullScreenCover) { _ in
-//                    //BumbleHomeView()
-//                }
-//            }
+            Button("Open Bumble") {
+                router.showScreen(.fullScreenCover) { _ in
+                    BumbleHomeView()
+                }
+            }
 //            
 //            Button("Open Netflix") {
 //                router.showScreen(.fullScreenCover) { _ in

@@ -10,70 +10,76 @@ import SwiftfulUI
 
 struct BumbleCardView: View {
     
-    @State private var cardFRame: CGRect = .zero
-    
-    var onSuperLikeButton: (() -> Void)? = nil
-    
     var user: User = .mock
+    var onSendAComplimentPressed: (() -> Void)? = nil
+    var onSuperLikePressed: (() -> Void)? = nil
+    var onXmarkPressed: (() -> Void)? = nil
+    var onCheckmarkPressed: (() -> Void)? = nil
+    var onHideAndReportPressed: (() -> Void)? = nil
+
+    @State private var cardFrame: CGRect = .zero
     
     var body: some View {
         ScrollView(.vertical) {
-            
             LazyVStack(spacing: 0) {
-                
                 headerCell
-                    .frame(height: cardFRame.height)
-                
+                    .frame(height: cardFrame.height)
+
                 aboutMeSection
-                .padding(.horizontal, 24)
-                .padding(.vertical, 24)
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 24)
                 
                 myInterestsSection
                     .padding(.horizontal, 24)
                     .padding(.vertical, 24)
                 
-                
                 ForEach(user.images, id: \.self) { image in
                     ImageLoaderView(urlString: image)
-                        .frame(height: cardFRame.height)
+                        .frame(height: cardFrame.height)
                 }
                 
                 locationSection
                     .padding(.horizontal, 24)
                     .padding(.vertical, 24)
-            
+
+                footerSection
+                    .padding(.top, 60)
+                    .padding(.bottom, 60)
+                    .padding(.horizontal, 32)
             }
         }
         .scrollIndicators(.hidden)
         .background(.bumbleBackgroundYellow)
-        .overlay(alignment: .bottomTrailing) {
+        .overlay(
             superLikeButton
                 .padding(24)
-        }
+            
+            , alignment: .bottomTrailing
+        )
         .cornerRadius(32)
         .readingFrame { frame in
-                cardFRame = frame
+            cardFrame = frame
         }
-    }
-    
-    private func sectionTitle(title: String) -> some View {
-        Text(title)
-            .font(.body)
-            .foregroundStyle(.bumbleGray)
     }
     
     private var superLikeButton: some View {
         Image(systemName: "hexagon.fill")
             .foregroundStyle(.bumbleYellow)
             .font(.system(size: 60))
-            .overlay {
+            .overlay(
                 Image(systemName: "star.fill")
                     .foregroundStyle(.bumbleBlack)
                     .font(.system(size: 30, weight: .medium))
-            }
+            )
             .onTapGesture {
-                onSuperLikeButton?()
+                onSuperLikePressed?()
             }
+    }
+    
+    private func sectionTitle(title: String) -> some View {
+        Text(title)
+            .font(.body)
+            .foregroundStyle(.bumbleGray)
     }
     
     private var headerCell: some View {
@@ -89,7 +95,6 @@ struct BumbleCardView: View {
                     Image(systemName: "suitcase")
                     Text(user.work)
                 }
-                
                 HStack(spacing: 4) {
                     Image(systemName: "graduationcap")
                     Text(user.education)
@@ -97,6 +102,7 @@ struct BumbleCardView: View {
                 
                 BumbleHeartView()
                     .onTapGesture {
+                        
                     }
             }
             .padding(24)
@@ -109,13 +115,12 @@ struct BumbleCardView: View {
                     colors: [
                         .bumbleBlack.opacity(0),
                         .bumbleBlack.opacity(0.6),
-                        .bumbleBlack.opacity(0.6)
+                        .bumbleBlack.opacity(0.6),
                     ],
                     startPoint: .top,
                     endPoint: .bottom
                 )
             )
-            
         }
     }
     
@@ -130,7 +135,7 @@ struct BumbleCardView: View {
             
             HStack(spacing: 0) {
                 BumbleHeartView()
-
+                
                 Text("Send a Compliment")
                     .font(.caption)
                     .fontWeight(.semibold)
@@ -138,6 +143,9 @@ struct BumbleCardView: View {
             .padding([.horizontal, .trailing], 8)
             .background(.bumbleYellow)
             .cornerRadius(32)
+            .onTapGesture {
+                onSendAComplimentPressed?()
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -167,7 +175,6 @@ struct BumbleCardView: View {
             .font(.body)
             .fontWeight(.medium)
             
-            
             Text("10 miles away")
                 .font(.headline)
                 .foregroundStyle(.bumbleBlack)
@@ -175,6 +182,47 @@ struct BumbleCardView: View {
             InterestPillView(iconName: nil, emoji: "🇺🇸", text: "Lives in New York, NY")
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+    
+    private var footerSection: some View {
+        VStack(spacing: 24) {
+            HStack(spacing: 0) {
+                Circle()
+                    .fill(.bumbleYellow)
+                    .overlay(
+                        Image(systemName: "xmark")
+                            .font(.title)
+                            .fontWeight(.semibold)
+                    )
+                    .frame(width: 60, height: 60)
+                    .onTapGesture {
+                        onXmarkPressed?()
+                    }
+                
+                Spacer(minLength: 0)
+                
+                Circle()
+                    .fill(.bumbleYellow)
+                    .overlay(
+                        Image(systemName: "checkmark")
+                            .font(.title)
+                            .fontWeight(.semibold)
+                    )
+                    .frame(width: 60, height: 60)
+                    .onTapGesture {
+                        onCheckmarkPressed?()
+                    }
+            }
+            
+            Text("Hide and Report")
+                .font(.headline)
+                .foregroundStyle(.bumbleGray)
+                .padding(8)
+                .background(Color.black.opacity(0.001))
+                .onTapGesture {
+                    onHideAndReportPressed?()
+                }
+        }
     }
 }
 
