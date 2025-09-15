@@ -22,6 +22,8 @@ struct BumblehomeView: View {
                 BumbleFilterView(selection: $selection, options: options)
                     .background(Divider(), alignment: .bottom)
                 
+                BumbleCardView()
+                
                 Spacer()
                 
             } // VStack
